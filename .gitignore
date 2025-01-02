@@ -4,3 +4,4 @@ src/
 *.exe
 SDL2.dll
 .vscode
+*.o

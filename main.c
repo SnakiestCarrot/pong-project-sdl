@@ -1,45 +1,27 @@
 
-#include <stdint.h>
-#include <math.h>
-#include <stdio.h>
-#include "io.h"
-#include "display.h"
-#include "gameLoop.h"
+#include <SDL2/SDL.h>
+#include "constants.h"
+#include "rendering.h"
 
-#define FPS 144
+SDL_Window* window;
+SDL_Surface* surface;
 
-int main(int argc, char* argv[]) {
-	
-	printf("HELLO WORLD!");
+void window_init()
+{
+    SDL_Init(SDL_INIT_EVERYTHING);
+    window = SDL_CreateWindow("Blank Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    surface = SDL_GetWindowSurface(window);
+}
 
-   window_init();
+int main(int argc, char* argv[]) 
+{
+	window_init();
 
-   SDL_Event event;
+    display_ball(surface,3,3);
 
-   int running = 1;
+    display_update(window);
 
-   while (running)
-   {
-      while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT:
-                    running = 0;
-                    break;
-                default:
-                    break;
-            }
-        }
-      printf("%d\n", btn1pressed());
-
-      displayPixel(3, 3);
-
-      gameLoop();
-
-      SDL_Delay(1000/FPS);
-
-      display_update();
-   }
-   
+    SDL_Delay(3000);
 
 	return 0;
 }

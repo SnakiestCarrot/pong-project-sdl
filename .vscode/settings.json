@@ -5,6 +5,8 @@
         "math.h": "c",
         "sdl.h": "c",
         "stdio.h": "c",
-        "gamelogic.h": "c"
+        "gamelogic.h": "c",
+        "xiosbase": "cpp",
+        "constants.h": "c"
     }
 }
