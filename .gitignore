@@ -1,0 +1,6 @@
+main.exe
+src/
+.vscode
+*.exe
+SDL2.dll
+.vscode

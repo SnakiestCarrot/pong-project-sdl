@@ -1,9 +1,8 @@
 
 
 #include <stdint.h>   /* Declarations of uint_32 and the like */
-#include <pic32mx.h>  /* Declarations of system-specific addresses etc */
-#include "mipslab.h"  /* Declatations for these labs */
 #include <math.h>
+#include "gameLogic.h"
 
 /*
  gameLogic.c
@@ -13,8 +12,9 @@
  Made by Casper Johansson and August Wikdahl
 */
 
+
 // set the default paddle height here
-int defaultPaddleHeight = 8;
+
 
 // creating ball and paddles
 struct Ball gameBall;
@@ -135,4 +135,5 @@ void ballsInit(){
 
     noOfBalls = 1;
 }
+
 
