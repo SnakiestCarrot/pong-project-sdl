@@ -12,5 +12,6 @@
 #define FPS 144
 
 extern const int BALLSIZE;
+extern const int PADDLESIZE;
 
 #endif // CONSTANTS_H
