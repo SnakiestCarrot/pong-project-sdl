@@ -9,7 +9,7 @@
 #define SCREEN_WIDTH (ORIGINAL_WIDTH*SCREEN_SCALING)
 #define SCREEN_HEIGHT (ORIGINAL_HEIGHT*SCREEN_SCALING)
 
-#define FPS 144
+#define FPS 60
 
 extern const int BALLSIZE;
 extern const int PADDLESIZE;

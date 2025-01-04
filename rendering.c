@@ -1,6 +1,7 @@
 
 #include "rendering.h"
 #include "constants.h"
+#include "structs.h"
 #include <SDL2/SDL.h>
 
 SDL_Window *window;
@@ -39,8 +40,11 @@ void display_pixel(int xPos, int yPos)
 	draw_rectangle(xPos * SCREEN_SCALING, yPos * SCREEN_SCALING, SCREEN_SCALING, SCREEN_SCALING);
 }
 
-void display_ball(double x, double y)
+void display_ball(struct Ball *ball)
 {
+	int x = ball->posX;
+	int y = ball->posY;
+
 	int i, j;
 	int ballX = (int)x; // casting solves visual bug
 	int ballY = (int)y; // casting solves visual bug
@@ -53,8 +57,11 @@ void display_ball(double x, double y)
 	}
 }
 
-void display_paddle(double x, double y)
+void display_paddle(struct Paddle *paddle)
 {
+	double x = paddle->posX;
+	double y = paddle->posY;
+	
 	// typecasting here solves a rare bug
 	int paddleX = (int)x;
 	int paddleY = (int)y;
