@@ -1,44 +1,74 @@
 
+#include "constants.h"
 #include "structs.h"
 #include "gamelogic.h"
 
 // Hitbox safety margin
-const double hitbox_size = 1.0;
+const double HITBOX_SIZE = 1.0;
 
 // Determines the sensitivity of the ball bouncing of the paddles
 // it is essentially the maximum angle the ball can bounce at from horizontal
 const double bounciness = (1.2 * 3.1415) / 5;
 
+double ball_max_speed = 60.0 / FPS;
 
-double ball_max_speed = 1.0;
-
-double paddle_speed = 40.0;
+double paddle_speed = 60.0 / FPS;
 
 double trajectoryModifier = 1.0;
 
 void set_paddle_speed(double speed)
 {
-    paddle_speed = speed;
+  paddle_speed = speed / FPS;
 }
 
-int ball_paddle_collision (struct Paddle *p, struct Ball *b)
+void set_ball_max_speed(double speed)
 {
-  int ballPaddleXCollide = ((p->posX) - hitbox_size <= (b->posX) + hitbox_size &&
-                              (p->posX) + hitbox_size >= (b->posX) - hitbox_size);
-  int ballPaddleYCollide = (((p->posY) - hitbox_size <= (b->posY) + hitbox_size) &&
-                              ((p->posY) + (p->height) + hitbox_size) >= (b->posY) - hitbox_size);
+  ball_max_speed = speed / FPS;
+}
+
+int ball_paddle_collision(struct Paddle *p, struct Ball *b)
+{
+  int ballPaddleXCollide = ((p->posX) - HITBOX_SIZE <= (b->posX) + HITBOX_SIZE &&
+                            (p->posX) + HITBOX_SIZE >= (b->posX) - HITBOX_SIZE);
+  int ballPaddleYCollide = (((p->posY) - HITBOX_SIZE <= (b->posY) + HITBOX_SIZE) &&
+                            ((p->posY) + (p->height) + HITBOX_SIZE) >= (b->posY) - HITBOX_SIZE);
 
   int ballPaddleCollision = ballPaddleXCollide && ballPaddleYCollide;
   return ballPaddleCollision;
 }
 
-double calculate_bounce_angle (struct Paddle *p, struct Ball *b)
+double calculate_bounce_angle(struct Paddle *p, struct Ball *b)
 {
-  double relativeY = ((p->posY) + ((p->height)/2)) - (b->posY);
-  double intersectCoefficient = (relativeY / ((p->height) / 2)) * trajectoryModifier;
-  double bounceAngle = intersectCoefficient * bounciness;
-  return bounceAngle;
+  double relativeY = ((p->posY) + ((p->height) / 2)) - (b->posY);
+  double intersect_coefficient = (relativeY / ((p->height) / 2)) * trajectoryModifier;
+  double bounce_angle = intersect_coefficient * bounciness;
+  return bounce_angle;
 }
 
+void move_paddle(struct Paddle *p, int (*up_button_is_pressed)(void), int (*down_button_is_pressed)(void))
+{
+  if (down_button_is_pressed() && p->posY > -1)
+  {
+    p->speedY = paddle_speed;
+  }
+  else if (up_button_is_pressed() && (p->posY + 4) < ORIGINAL_HEIGHT)
+  {
+    p->speedY = -paddle_speed;
+  }
+  else
+  {
+    p->speedY = 0;
+  }
+}
 
+void update_ball_position(struct Ball *b)
+{
+  b->posX += b->speedX;
+  b->posY += b->speedY;
+}
 
+void update_paddle_position(struct Paddle *p)
+{
+  p->posX += p->speedX;
+  p->posY += p->speedY;
+}

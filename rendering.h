@@ -12,6 +12,6 @@ void display_pixel(int xPos, int yPos);
 
 void display_ball(struct Ball *ball);
 
-void window_init(char* window_name);
-
 void display_paddle(struct Paddle *paddle);
+
+void window_init(char* window_name);

@@ -58,20 +58,10 @@ void game_loop()
             }
         }
 
-        if (is_a_pressed() && right_paddle.posY > -1)
-        {
-            right_paddle.speedY = paddle_speed / 60.0;
-        }
-        else if (is_d_pressed() && (right_paddle.posY + 4) < 32)
-        {
-            right_paddle.speedY = -paddle_speed / 60.0;
-        }
-        else
-        {
-            right_paddle.speedY = 0;
-        }
+        move_paddle(&left_paddle, is_a_pressed, is_s_pressed);
+        move_paddle(&right_paddle, is_d_pressed, is_f_pressed);
 
-        if (game_ball.posX >= 127)
+        if (game_ball.posX >= ORIGINAL_WIDTH)
         {
             game_ball.speedX *= -1;
         }
@@ -89,9 +79,9 @@ void game_loop()
             game_ball.speedY *= -1;
         }
 
-        if (game_ball.posY >= 31)
+        if (game_ball.posY >= ORIGINAL_HEIGHT-1)
         {
-            game_ball.posY = 31.0;
+            game_ball.posY = ORIGINAL_HEIGHT-1;
             game_ball.speedY *= -1;
         }
 
@@ -100,9 +90,9 @@ void game_loop()
         {
             right_paddle.posY = 0;
         }
-        else if ((right_paddle.posY + right_paddle.height) >= 32)
+        else if ((right_paddle.posY + right_paddle.height) >= ORIGINAL_HEIGHT)
         {
-            right_paddle.posY = 32 - (right_paddle.height + 1);
+            right_paddle.posY = ORIGINAL_HEIGHT - (right_paddle.height);
         }
 
         // Left paddle and wall collison detection
@@ -112,7 +102,7 @@ void game_loop()
         }
         else if ((left_paddle.posY + left_paddle.height) >= 32)
         {
-            left_paddle.posY = 32 - (left_paddle.height + 1);
+            left_paddle.posY = 32 - (left_paddle.height);
         }
 
         if (ball_paddle_collision(&right_paddle, &game_ball))
@@ -141,6 +131,7 @@ void game_loop()
             game_ball.speedX = ball_max_speed * cos(bounce_angle);
             game_ball.speedY = ball_max_speed * -sin(bounce_angle);
 
+            // TODO: add playermode 2
             // Adds speed at mode 2
             /*
             if (playerMode == 2){
@@ -150,16 +141,13 @@ void game_loop()
         }
 
         // Ball position update
-        game_ball.posX += (game_ball.speedX);
-        game_ball.posY += game_ball.speedY;
-
+        update_ball_position(&game_ball);
+        
         // Right paddle position update
-        right_paddle.posX += right_paddle.speedX;
-        right_paddle.posY += right_paddle.speedY;
+        update_paddle_position(&right_paddle);
 
         // Left paddle position update
-        left_paddle.posX += left_paddle.speedX;
-        left_paddle.posY += left_paddle.speedY;
+        update_paddle_position(&left_paddle);
 
         display_paddle(&left_paddle);
         display_paddle(&right_paddle);
