@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -O0 -m64 -I ./src/include -L ./src/lib
 
 # Output file
-OUTPUT = main
+OUTPUT = pong
 
 # Find all .c files dynamically
 SOURCES = $(wildcard *.c)
