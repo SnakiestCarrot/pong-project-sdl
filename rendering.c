@@ -6,12 +6,15 @@
 
 SDL_Window *window;
 SDL_Surface *surface;
+SDL_Renderer *renderer;
 
 void window_init(char *window_name)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	window = SDL_CreateWindow(window_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	surface = SDL_GetWindowSurface(window);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+	SDL_RenderPresent(renderer);
 }
 
 /*
@@ -20,17 +23,19 @@ Helper function to handle drawing rectangles with SDL
 void draw_rectangle(int xpos, int ypos, int width, int height)
 {
 	SDL_Rect rectangle = {xpos, ypos, width, height};
-	SDL_FillRect(surface, &rectangle, COLOR_WHITE);
+	SDL_RenderFillRect(renderer, &rectangle);
 }
 
 void display_clear()
 {
-	SDL_FillRect(surface, NULL, COLOR_BLACK);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(renderer);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 }
 
 void display_update()
 {
-	SDL_UpdateWindowSurface(window);
+	SDL_RenderPresent(renderer);
 	SDL_Delay(1000 / FPS);
 	display_clear();
 }

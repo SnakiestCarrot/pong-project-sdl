@@ -6,6 +6,10 @@
 int main(int argc, char* argv[]) 
 {
     window_init("Blank window");
+
     game_loop();
+
+
+    // game_loop();
 	return 0;
 }
