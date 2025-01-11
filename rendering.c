@@ -45,7 +45,7 @@ void display_update()
 void display_string(int line, char *text)
 {
 	// Taken from https://stackoverflow.com/a/22889483 
-	TTF_Font *Sans = TTF_OpenFont("Sans.ttf", 24);
+	TTF_Font *Sans = TTF_OpenFont("Sans.ttf", 48);
 
 	SDL_Color White = {255, 255, 255};
 
@@ -55,15 +55,22 @@ void display_string(int line, char *text)
 	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
 	SDL_Rect Message_rect;
+	SDL_GetClipRect(surfaceMessage, &Message_rect);
 	Message_rect.x = 0;
 	Message_rect.y = line*(SCREEN_HEIGHT/4);
-	Message_rect.w = SCREEN_WIDTH;
-	Message_rect.h = SCREEN_HEIGHT/4;
 
 	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
 
 	SDL_FreeSurface(surfaceMessage);
 	SDL_DestroyTexture(Message);
+}
+
+void display_4_strings ( char *line0, char *line1, char *line2, char *line3 ) {
+  display_string(0, line0);
+  display_string(1, line1);
+  display_string(2, line2);
+  display_string(3, line3);
+  display_update();
 }
 
 void display_pixel(int xPos, int yPos)

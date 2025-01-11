@@ -1,3 +1,3 @@
 
 
-void game_loop();
+int game_loop();

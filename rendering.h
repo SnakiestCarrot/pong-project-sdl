@@ -16,4 +16,6 @@ void display_paddle(struct Paddle *paddle);
 
 void window_init(char* window_name);
 
-void display_string(int line, char* text);
+void display_string(int line, char *text);
+
+void display_4_strings(char *line0, char *line1, char *line2, char *line3);

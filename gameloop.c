@@ -39,7 +39,7 @@ void game_state_init(void)
     left_paddle.height = PADDLESIZE;
 }
 
-void game_loop()
+int game_loop()
 {
     game_state_init();
     int running = 1;
@@ -52,10 +52,16 @@ void game_loop()
             {
             case SDL_QUIT:
                 running = 0;
+                return 0;
                 break;
             default:
                 break;
             }
+        }
+
+        if(is_q_pressed())
+        {
+            running = 0;
         }
 
         move_paddle(&left_paddle, is_a_pressed, is_s_pressed);
@@ -156,4 +162,5 @@ void game_loop()
 
         display_update();
     }
+    return 1;
 }
