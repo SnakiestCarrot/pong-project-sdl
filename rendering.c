@@ -3,6 +3,7 @@
 #include "constants.h"
 #include "structs.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 SDL_Window *window;
 SDL_Surface *surface;
@@ -11,6 +12,7 @@ SDL_Renderer *renderer;
 void window_init(char *window_name)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
+	TTF_Init();
 	window = SDL_CreateWindow(window_name, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
@@ -40,6 +42,30 @@ void display_update()
 	display_clear();
 }
 
+void display_string(int line, char *text)
+{
+	// Taken from https://stackoverflow.com/a/22889483 
+	TTF_Font *Sans = TTF_OpenFont("Sans.ttf", 24);
+
+	SDL_Color White = {255, 255, 255};
+
+	SDL_Surface *surfaceMessage =
+		TTF_RenderText_Solid(Sans, text, White);
+
+	SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+	SDL_Rect Message_rect;
+	Message_rect.x = 0;
+	Message_rect.y = line*(SCREEN_HEIGHT/4);
+	Message_rect.w = SCREEN_WIDTH;
+	Message_rect.h = SCREEN_HEIGHT/4;
+
+	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+
+	SDL_FreeSurface(surfaceMessage);
+	SDL_DestroyTexture(Message);
+}
+
 void display_pixel(int xPos, int yPos)
 {
 	draw_rectangle(xPos * SCREEN_SCALING, yPos * SCREEN_SCALING, SCREEN_SCALING, SCREEN_SCALING);
@@ -66,7 +92,7 @@ void display_paddle(struct Paddle *paddle)
 {
 	double x = paddle->posX;
 	double y = paddle->posY;
-	
+
 	// typecasting here solves a rare bug
 	int paddleX = (int)x;
 	int paddleY = (int)y;

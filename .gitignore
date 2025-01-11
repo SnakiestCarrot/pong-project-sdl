@@ -5,3 +5,4 @@ src/
 SDL2.dll
 .vscode
 *.o
+SDL2_ttf.dll
