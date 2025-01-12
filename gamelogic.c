@@ -10,21 +10,15 @@ const double HITBOX_SIZE = 1.0;
 // it is essentially the maximum angle the ball can bounce at from horizontal
 const double bounciness = (1.2 * 3.1415) / 5;
 
-double ball_max_speed = 60.0 / FPS;
+double ball_max_speed = 85.0 / FPS;
 
 double paddle_speed = 60.0 / FPS;
 
 double trajectoryModifier = 1.0;
 
-void set_paddle_speed(double speed)
-{
-  paddle_speed = speed / FPS;
-}
+enum Difficulty difficulty = EASY;
 
-void set_ball_max_speed(double speed)
-{
-  ball_max_speed = speed / FPS;
-}
+int player_mode = 0;
 
 int ball_paddle_collision(struct Paddle *p, struct Ball *b)
 {

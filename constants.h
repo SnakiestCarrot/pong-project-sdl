@@ -11,6 +11,17 @@
 
 #define FPS 144
 
+enum Difficulty {
+    EASY,
+    HARD
+};
+
+enum Menu_State {
+    SPLASH,
+    HISCORE,
+    OPTIONS
+};
+
 extern const int BALLSIZE;
 extern const int PADDLESIZE;
 
