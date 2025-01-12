@@ -15,5 +15,6 @@ void update_paddle_position(struct Paddle *p);
 
 extern double paddle_speed;
 extern double ball_max_speed;
-extern int player_mode;
+extern enum Player_Mode player_mode;
+extern double paddle_speed_ai;
 extern enum Difficulty difficulty;

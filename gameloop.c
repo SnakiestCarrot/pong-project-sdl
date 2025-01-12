@@ -37,6 +37,12 @@ void game_state_init(void)
     left_paddle.speedX = 0;
     left_paddle.speedY = 0;
     left_paddle.height = PADDLESIZE;
+
+    if (difficulty == EASY) {
+        paddle_speed_ai = 30.0 / FPS;
+    } else if (difficulty == HARD) {
+        paddle_speed_ai = 45.0 / FPS;
+    }
 }
 
 int game_loop()
@@ -65,7 +71,33 @@ int game_loop()
         }
 
         move_paddle(&left_paddle, is_a_pressed, is_s_pressed);
-        move_paddle(&right_paddle, is_d_pressed, is_f_pressed);
+
+
+        if (player_mode == TWOPLAYER || player_mode == INCREASINGSPEED || player_mode == MULTIPLEBALLS) 
+        {
+            move_paddle(&right_paddle, is_d_pressed, is_f_pressed);
+        }
+
+        if (player_mode == ONEPLAYER) 
+        {
+            int yPosCheck = game_ball.posY > right_paddle.posY + (right_paddle.height / 2);
+            int boundsCheckUpper = right_paddle.posY > -1;
+            int boundsCheckLower = (right_paddle.posY + 4) < 32;
+
+            // Will wait until the player hits the paddle
+            int waitForHit = game_ball.speedX > 0;
+
+            if (yPosCheck && boundsCheckUpper && waitForHit) {
+                right_paddle.speedY = paddle_speed_ai;
+            } 
+            else if (~yPosCheck && boundsCheckLower && waitForHit) {
+                right_paddle.speedY = -paddle_speed_ai;
+            } 
+            else {
+                right_paddle.speedY = 0;
+            }
+        } 
+        
 
         if (game_ball.posX >= ORIGINAL_WIDTH)
         {

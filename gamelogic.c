@@ -16,9 +16,11 @@ double paddle_speed = 60.0 / FPS;
 
 double trajectoryModifier = 1.0;
 
+double paddle_speed_ai = 30.0 / FPS;
+
 enum Difficulty difficulty = EASY;
 
-int player_mode = 0;
+enum Player_Mode player_mode = TWOPLAYER;
 
 int ball_paddle_collision(struct Paddle *p, struct Ball *b)
 {

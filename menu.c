@@ -42,7 +42,7 @@ void displaySplashMenu ( void ) {
     text_buffer[3] = "4: Back";
 }
 
-void displayOptionsMenu ( void ) {
+void display_options_menu ( void ) {
     text_buffer[0] = difficultyStr[difficulty];
     text_buffer[1] = ballStr;
     text_buffer[2] = player_mode_str[player_mode];
@@ -52,6 +52,21 @@ void displayOptionsMenu ( void ) {
 void display_buffer(char *buffer[])
 {
     display_4_strings(buffer[0], buffer[1], buffer[2], buffer[3]);
+}
+
+void display_countdown ( void ) {
+    text_buffer[0] = "    Game will";
+    text_buffer[1] = "    start in:";
+    text_buffer[2] = "        3";
+    text_buffer[3] = "";
+    display_buffer(text_buffer);
+    SDL_Delay(1000);
+    text_buffer[2] = "        2";
+    display_buffer(text_buffer);
+    SDL_Delay(1000);
+    text_buffer[2] = "        1";
+    display_buffer(text_buffer);
+    SDL_Delay(1000);
 }
 
 enum Menu_State menu_state = SPLASH;
@@ -104,6 +119,7 @@ void menu_handler ( void ) {
         displaySplashMenu();
 
         if (is_a_pressed()) {
+            display_countdown();
             game_loop();
         }
 
@@ -114,7 +130,8 @@ void menu_handler ( void ) {
 
         if (is_d_pressed()) {
             menu_state = OPTIONS;
-            displayOptionsMenu();
+            display_options_menu();
+            SDL_Delay(200);
         }
 
         /* 
@@ -142,6 +159,7 @@ void menu_handler ( void ) {
             difficulty = (difficulty == EASY ? HARD : EASY); // toggles difficulty
 
             text_buffer[0] = difficultyStr[difficulty];
+            SDL_Delay(200);
         }
 
         // changes paddle speed
@@ -150,12 +168,14 @@ void menu_handler ( void ) {
             ballStr = (ball_max_speed == (85.0 / FPS) ? ballMaxSpeedStr[0] : ballMaxSpeedStr[1]);
 
             text_buffer[1] = ballStr;
+            SDL_Delay(200);
         } 
 
         // changes player mode
         if (is_d_pressed()) {
-            player_mode = (player_mode == 3 ? 0 : player_mode + 1); // toggles player mode
+            player_mode = (player_mode == MULTIPLEBALLS ? TWOPLAYER : player_mode + 1); // toggles player mode
             text_buffer[2] = player_mode_str[player_mode];
+            SDL_Delay(200);
         }
     }
 }

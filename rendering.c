@@ -45,7 +45,7 @@ void display_update()
 void display_string(int line, char *text)
 {
 	// Taken from https://stackoverflow.com/a/22889483 
-	TTF_Font *Sans = TTF_OpenFont("Sans.ttf", 48);
+	TTF_Font *Sans = TTF_OpenFont("Sans.ttf", 7*SCREEN_SCALING);
 
 	SDL_Color White = {255, 255, 255};
 
