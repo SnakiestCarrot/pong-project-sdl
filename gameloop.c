@@ -77,8 +77,7 @@ int game_loop()
         {
             move_paddle(&right_paddle, is_d_pressed, is_f_pressed);
         }
-
-        if (player_mode == ONEPLAYER) 
+        else if (player_mode == ONEPLAYER) 
         {
             int yPosCheck = game_ball.posY > right_paddle.posY + (right_paddle.height / 2);
             int boundsCheckUpper = right_paddle.posY > -1;
