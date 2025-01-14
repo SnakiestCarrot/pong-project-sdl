@@ -38,9 +38,12 @@ void game_state_init(void)
     left_paddle.speedY = 0;
     left_paddle.height = PADDLESIZE;
 
-    if (difficulty == EASY) {
+    if (difficulty == EASY) 
+    {
         paddle_speed_ai = 30.0 / FPS;
-    } else if (difficulty == HARD) {
+    } 
+    else if (difficulty == HARD) 
+    {
         paddle_speed_ai = 45.0 / FPS;
     }
 }
@@ -69,7 +72,7 @@ int game_loop()
         {
             running = 0;
         }
-
+        // left paddle always movable controllable
         move_paddle(&left_paddle, is_a_pressed, is_s_pressed);
 
 
