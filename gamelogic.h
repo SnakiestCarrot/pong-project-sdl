@@ -9,6 +9,8 @@ double calculate_bounce_angle (struct Paddle *p, struct Ball *b);
 
 void move_paddle(struct Paddle *p, int (*up_button_is_pressed)(void), int (*down_button_is_pressed)(void));
 
+void ai_move_paddle(struct Ball *b, struct Paddle *p);
+
 void update_ball_position(struct Ball *b);
 
 void update_paddle_position(struct Paddle *p);

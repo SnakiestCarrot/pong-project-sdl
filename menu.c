@@ -54,11 +54,6 @@ void displayCredits ( void ) {
   SDL_Delay(2000);
 }
 
-void display_buffer(char *buffer[])
-{
-    display_4_strings(buffer[0], buffer[1], buffer[2], buffer[3]);
-}
-
 void display_countdown ( void ) {
     text_buffer[0] = "    Game will";
     text_buffer[1] = "    start in:";

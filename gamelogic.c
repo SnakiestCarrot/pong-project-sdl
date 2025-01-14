@@ -57,6 +57,29 @@ void move_paddle(struct Paddle *p, int (*up_button_is_pressed)(void), int (*down
   }
 }
 
+void ai_move_paddle(struct Ball *b, struct Paddle *p)
+{
+  int yPosCheck = b->posY > p->posY + (p->height / 2);
+  int boundsCheckUpper = p->posY > -1;
+  int boundsCheckLower = (p->posY + 4) < 32;
+
+  // Will wait until the player hits the ball
+  int waitForHit = b->speedX > 0;
+
+  if (yPosCheck && boundsCheckUpper && waitForHit)
+  {
+    p->speedY = paddle_speed_ai;
+  }
+  else if (~yPosCheck && boundsCheckLower && waitForHit)
+  {
+    p->speedY = -paddle_speed_ai;
+  }
+  else
+  {
+    p->speedY = 0;
+  }
+}
+
 void update_ball_position(struct Ball *b)
 {
   b->posX += b->speedX;

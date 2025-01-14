@@ -73,6 +73,11 @@ void display_4_strings ( char *line0, char *line1, char *line2, char *line3 ) {
   display_update();
 }
 
+void display_buffer(char *buffer[])
+{
+    display_4_strings(buffer[0], buffer[1], buffer[2], buffer[3]);
+}
+
 void display_pixel(int xPos, int yPos)
 {
 	draw_rectangle(xPos * SCREEN_SCALING, yPos * SCREEN_SCALING, SCREEN_SCALING, SCREEN_SCALING);

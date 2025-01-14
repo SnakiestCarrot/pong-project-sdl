@@ -79,22 +79,7 @@ int game_loop()
         }
         else if (player_mode == ONEPLAYER) 
         {
-            int yPosCheck = game_ball.posY > right_paddle.posY + (right_paddle.height / 2);
-            int boundsCheckUpper = right_paddle.posY > -1;
-            int boundsCheckLower = (right_paddle.posY + 4) < 32;
-
-            // Will wait until the player hits the ball
-            int waitForHit = game_ball.speedX > 0;
-
-            if (yPosCheck && boundsCheckUpper && waitForHit) {
-                right_paddle.speedY = paddle_speed_ai;
-            } 
-            else if (~yPosCheck && boundsCheckLower && waitForHit) {
-                right_paddle.speedY = -paddle_speed_ai;
-            } 
-            else {
-                right_paddle.speedY = 0;
-            }
+            ai_move_paddle(&game_ball, &right_paddle);
         } 
         
 
