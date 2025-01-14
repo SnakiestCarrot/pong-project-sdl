@@ -83,7 +83,7 @@ int game_loop()
             int boundsCheckUpper = right_paddle.posY > -1;
             int boundsCheckLower = (right_paddle.posY + 4) < 32;
 
-            // Will wait until the player hits the paddle
+            // Will wait until the player hits the ball
             int waitForHit = game_ball.speedX > 0;
 
             if (yPosCheck && boundsCheckUpper && waitForHit) {

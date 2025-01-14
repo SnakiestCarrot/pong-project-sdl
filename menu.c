@@ -49,6 +49,11 @@ void display_options_menu ( void ) {
     text_buffer[3] = "4: Back";
 }
 
+void displayCredits ( void ) {
+  display_4_strings("Made by;", "August Wikdahl", "Casper", "Johansson");
+  SDL_Delay(2000);
+}
+
 void display_buffer(char *buffer[])
 {
     display_4_strings(buffer[0], buffer[1], buffer[2], buffer[3]);
@@ -129,16 +134,15 @@ void menu_handler ( void ) {
         } */
 
         if (is_d_pressed()) {
-            menu_state = OPTIONS;
             display_options_menu();
-            SDL_Delay(200);
+            menu_state = OPTIONS;
         }
 
-        /* 
-        if (getsw() == 0x8) {
+        
+        if (is_q_pressed()) {
             displayCredits();
         } 
-        */
+        
     }
   
 
