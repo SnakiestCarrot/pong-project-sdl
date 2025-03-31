@@ -1,5 +1,6 @@
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECTS_H
+
+#ifndef STRUCTS_H
+#define STRUCTS_H
 
 
 struct Ball {
@@ -19,3 +20,14 @@ struct Paddle {
 
 
 #endif
+
+
+
+
+
+
+
+
+
+
+

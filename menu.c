@@ -1,7 +1,17 @@
 
-#include <stdint.h>   /* Declarations of uint_32 and the like */
-#include "mipslab.h"  /* Declatations for these labs */
-#include <math.h>
+#include "menu.h"
+#include "rendering.h"
+#include "input.h"
+#include "gameloop.h"
+#include "gamelogic.h"
+#include "constants.h"
+
+#include <SDL2/SDL.h>
+
+
+SDL_Event menu_event;
+
+char *text_buffer[4];
 
 /*Menu handling and display written by Casper Johansson and August Wikdahl
     except where specified.
@@ -18,56 +28,85 @@ char ballMaxSpeedStr[2][16] = {
 };
 
 // Used for player mode selection menu
-char playerModeStr[4][16] = {
-    "2 Players", "1 Player VS AI", "Increasing speed", "Multiple Balls"
+char player_mode_str[4][25] = {
+    "2 Players\n", "1 Player VS AI\n", "Increasing speed\n", "Multiple Balls\n"
 };
 
 // makes menu a bit simpler
 char *ballStr = "Ball spd: 85.0";
 
-int difficulty = 0;
-double paddleSpeed = 40.0;
-int playerMode = 0;
-double ballMaxSpeed = 85.0 / 60.0;
-
-/*displaySplashMenu:
-    Displays the menu that the game starts at
-*/
 void displaySplashMenu ( void ) {
-  display4Strings("1: Play", "2: HiScores", "3: Options", "4: Back");
+    text_buffer[0] = "1: Play";
+    text_buffer[1] = "2: HiScores";
+    text_buffer[2] = "3: Options";
+    text_buffer[3] = "4: Back";
 }
 
-/*displayHiScoreMenu:
-    Displays the menu for highscores
-*/
-void displayHiScoreMenu ( void ) {
-  display4Strings(highscorename1, highscorename2, highscorename3, "4: Back");
+void display_options_menu ( void ) {
+    text_buffer[0] = difficultyStr[difficulty];
+    text_buffer[1] = ballStr;
+    text_buffer[2] = player_mode_str[player_mode];
+    text_buffer[3] = "4: Back";
 }
 
-void displayOptionsMenu ( void ) {
-  display4Strings(difficultyStr[difficulty], ballStr, playerModeStr[playerMode], "4: Back");
+void displayCredits ( void ) {
+  display_4_strings("Made by;", "August Wikdahl", "Casper", "Johansson");
+  SDL_Delay(2000);
 }
 
-int splashMenu = 0;
-int hiScoreMenu = 2;
-int optionsMenu = 3;
+void display_countdown ( void ) {
+    text_buffer[0] = "    Game will";
+    text_buffer[1] = "    start in:";
+    text_buffer[2] = "        3";
+    text_buffer[3] = "";
+    display_buffer(text_buffer);
+    SDL_Delay(1000);
+    text_buffer[2] = "        2";
+    display_buffer(text_buffer);
+    SDL_Delay(1000);
+    text_buffer[2] = "        1";
+    display_buffer(text_buffer);
+    SDL_Delay(1000);
+}
 
-int menuState = 0;
+enum Menu_State menu_state = SPLASH;
+
+void menu_init()
+{
+    menu_state = SPLASH;
+}
+
+void menu_loop()
+{
+    menu_init();
+    int menu_running = 1;
+    while (menu_running)
+    {
+        // Handle quitting
+        while (SDL_PollEvent(&menu_event))
+        {
+            switch (menu_event.type)
+            {
+            case SDL_QUIT:
+                menu_running = 0;
+                break;
+            default:
+                break;
+            }
+        }
 
 
-// FIXME: Just generally how the menu works, too many if-statements, probably better with something else
+        menu_handler();
+        display_buffer(text_buffer);
+    }
+}
 
-/* menuHandler:
-  Handles menu state and enters the game loop
-
-  Written by Casper Johansson
-*/
-void menuHandler ( void ) {
+void menu_handler ( void ) {
     // Backs out to splash menu
     
 
-    if (btn4pressed()) {
-        menuState = splashMenu;
+    if (is_f_pressed()) {
+        menu_state = SPLASH;
         displaySplashMenu();
     }
 
@@ -75,38 +114,36 @@ void menuHandler ( void ) {
     /*
         Splash menu cases
     */
-    if (menuState == splashMenu) {
+    if (menu_state == SPLASH) {
         
         displaySplashMenu();
 
-        if (btn1pressed()) {
-            displayCountdown();
-            gameLoop();
+        if (is_a_pressed()) {
+            display_countdown();
+            game_loop();
         }
 
-        if (btn2pressed()) {
-            menuState = hiScoreMenu;
+        /* if (is_s_pressed()) {
+            menu_state = HISCORE;
             displayHiScoreMenu();
+        } */
+
+        if (is_d_pressed()) {
+            display_options_menu();
+            menu_state = OPTIONS;
         }
 
-        if (btn3pressed()) {
-            menuState = optionsMenu;
-            displayOptionsMenu();
-            quicksleep(1500000);    // Accidentally detects input when entering the menu otherwise
-        }
-
-        if (getsw() == 0x8) {
+        
+        if (is_q_pressed()) {
             displayCredits();
-        }
+        } 
+        
     }
   
 
     /*
         Highscore menu cases
     */
-    if (menuState == hiScoreMenu) {
-
-    }
 
 
 
@@ -114,37 +151,40 @@ void menuHandler ( void ) {
         Options menu cases
         by Casper Johansson and August Wikdahl.
     */
-    if (menuState == optionsMenu) {
+    if (menu_state == OPTIONS) {
         
         // changes AI difficulty
-        if (btn1pressed()) {
-            difficulty = (difficulty == 0 ? 1 : 0); // toggles difficulty
-    
-            display_string(0, difficultyStr[difficulty]);
-            display_update();
+        if (is_a_pressed()) {
+            difficulty = (difficulty == EASY ? HARD : EASY); // toggles difficulty
 
-            quicksleep(1000000); //FIXME: difficulty toggles super fast when pressing btn1 otherwise, maybe fix in a cleaner way
+            text_buffer[0] = difficultyStr[difficulty];
+            SDL_Delay(200);
         }
 
         // changes paddle speed
-        if (btn2pressed()) {
-            ballMaxSpeed = (ballMaxSpeed == (85.0 / 60.0) ? (130.0 / 60.0) : (85.0 / 60.0)); // toggles players paddle speed
-            ballStr = (ballMaxSpeed == (85.0 / 60.0) ? ballMaxSpeedStr[0] : ballMaxSpeedStr[1]);
+        if (is_s_pressed()) {
+            ball_max_speed = (ball_max_speed == (85.0 / FPS) ? (130.0 / FPS) : (85.0 / FPS)); // toggles players paddle speed
+            ballStr = (ball_max_speed == (85.0 / FPS) ? ballMaxSpeedStr[0] : ballMaxSpeedStr[1]);
 
-            display_string(1, ballStr);
-            display_update();
-
-            quicksleep(1000000); //FIXME: same as in difficulty
+            text_buffer[1] = ballStr;
+            SDL_Delay(200);
         } 
 
         // changes player mode
-        if (btn3pressed()) {
-            playerMode = (playerMode == 3 ? 0 : playerMode + 1); // toggles player mode
-
-            display_string(2, playerModeStr[playerMode]);
-            display_update();
-
-            quicksleep(1000000); //FIXME: same as in difficulty
+        if (is_d_pressed()) {
+            player_mode = (player_mode == MULTIPLEBALLS ? TWOPLAYER : player_mode + 1); // toggles player mode
+            text_buffer[2] = player_mode_str[player_mode];
+            SDL_Delay(200);
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
